@@ -77,7 +77,9 @@ New projects take 1–2 minutes before they accept connections.
 
 ## 3. Create the database
 
-Apply every file in `supabase/migrations/` **in filename order**. They are
+Apply every file in `supabase/migrations/` **in filename order**
+(or paste `supabase/install.sql`, all of them in one file, into the
+Supabase SQL Editor and press Run). They are
 idempotent, so re-running is safe.
 
 **A. Supabase MCP:** for each file, `apply_migration` with the file name

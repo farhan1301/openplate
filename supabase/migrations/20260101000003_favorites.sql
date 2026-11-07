@@ -20,9 +20,13 @@ create index if not exists idx_favorites_kind on favorites(kind);
 create index if not exists idx_favorites_meal on favorites(meal_id);
 
 alter table favorites enable row level security;
-create policy "Public read favorites"   on favorites for select using (true);
+drop policy if exists "Public read favorites" on favorites;
+create policy "Public read favorites" on favorites for select using (true);
+drop policy if exists "Public insert favorites" on favorites;
 create policy "Public insert favorites" on favorites for insert with check (true);
+drop policy if exists "Public update favorites" on favorites;
 create policy "Public update favorites" on favorites for update using (true);
+drop policy if exists "Public delete favorites" on favorites;
 create policy "Public delete favorites" on favorites for delete using (true);
 
 -- Custom tags shown on favorite cards (e.g. "South Indian" under Indian)
