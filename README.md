@@ -17,6 +17,8 @@ Self-host it for free in one prompt, talk to it from Claude, ChatGPT, Gemini or 
 
 </div>
 
+![OpenPlate: Home, Meals, Nutrition and Fitness](docs/screenshots/hero.png)
+
 ---
 
 ## Why
@@ -81,6 +83,16 @@ OpenPlate splits the job in two:
 
 Everything stays in sync: the app and every connected AI read and write the
 same live data.
+
+## 👀 Try the demo
+
+The demo runs the real app on made-up sample data, entirely in your browser:
+no account needed, nothing is saved, and it resets on reload. *(Link coming
+soon: deploy your own demo with one setting, below.)*
+
+**Host a demo yourself:** import this repo on [Vercel](https://vercel.com/new),
+add the environment variable `VITE_DEMO=true` (no Supabase needed), and
+deploy. The sample data lives in `src/demo/`.
 
 ## 🚀 One-prompt install
 

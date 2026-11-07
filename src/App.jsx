@@ -13,6 +13,7 @@ import UndoToast from './components/UndoToast'
 import { AccountSheet, Avatar, LoadingScreen, NoAccessScreen, SignInScreen } from './components/Auth'
 import { useAuth } from './lib/useAuth'
 import { ErrorBanner } from './components/ui'
+import DemoBanner from './components/DemoBanner'
 import { cx } from './lib/cx'
 
 const TABS = [
@@ -115,6 +116,7 @@ function Kitchen({ user, onSignOut }) {
               <Avatar user={user} />
             </button>
           </div>
+          <DemoBanner />
           <ErrorBanner message={kitchen.error} onDismiss={kitchen.clearError} />
           {kitchen.loading ? <Skeleton /> : <Active kitchen={kitchen} showUndo={undo.show} user={user} onNavigate={selectTab} />}
         </main>

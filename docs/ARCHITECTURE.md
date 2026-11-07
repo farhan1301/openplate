@@ -2,6 +2,10 @@
 
 How each part of OpenPlate works, for contributors and for AI agents changing the code. For setup see [INSTALL.md](../INSTALL.md).
 
+## Demo mode
+- `VITE_DEMO=true` swaps the Supabase client for `src/demo/client.js`: an in-memory stand-in that supports the query-builder calls the app makes (select with embeds, eq/in/is/gte/lte, order, limit, insert, update, upsert, delete, single/maybeSingle) and the RPCs the UI uses. Sample data is in `src/demo/seed.js`, dated relative to today. No sign-in, nothing persisted, creating agent keys explains that it's a demo. `src/components/DemoBanner.jsx` links to the repo.
+- If you add a new query-builder method or table to the app, add it to the demo client and seed too.
+
 ## Sign-in and access
 - Supabase Auth with an email magic link (works on every project with no setup). Google is optional: enable the provider in Supabase and set `VITE_ENABLE_GOOGLE_AUTH=true`.
 - Only emails in `meals_allowlist` can read or write anything; every table's RLS policy checks `meals_user_has_access()` (`supabase/migrations/*_auth.sql`). Add someone: `insert into meals_allowlist (email) values (lower('someone@example.com'));`
