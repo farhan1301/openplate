@@ -104,3 +104,9 @@ Tables: `ingredients`, `pantry`, `ingredient_categories`, `shopping_cart`, `meal
 9. Nutrition: set goals, log a custom food and a saved meal, edit / delete an entry and Undo; `log_food` from an agent shows up after refocusing the app
 10. Fitness: set gym days and a weekly goal, add a routine, tick today done, mark a past day skipped and rest, check the calendar and Home; `log_workout` and `update_about_me` from an agent show up after refocusing the app
 11. Supplements: tick a morning dose, add one with two times (two ticks), pause one (moves to Paused), remove one and Undo; `log_supplement` with `time: "morning"` from an agent shows up after refocusing the app
+
+## Security notes (Supabase advisors)
+A fresh install passes Supabase's security and performance advisors apart from these notices, which are expected:
+- **RLS enabled, no policy** on `meals_agent_tokens`, `meals_agent_actions`, `meals_allowlist`, `meals_settings`: deny-all on purpose; only `SECURITY DEFINER` functions read them.
+- **anon / authenticated can execute SECURITY DEFINER function** for the agent RPCs (`get_kitchen_snapshot`, `meals_agent_write`, `get_nutrition`, …) and the signed-in key management RPCs: this is the API. Each function checks a valid agent key (and `can_write` for writes) or a signed-in allowlisted member before touching data. Checked on a real project: a fake key, no key, and anonymous table reads all get nothing.
+- **Unused index** on a new project: goes away with use.
