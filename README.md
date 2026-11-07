@@ -7,7 +7,7 @@
 An open-source, MCP-first alternative to paid nutrition and meal-planning apps.
 Self-host it for free in one prompt, talk to it from Claude, ChatGPT, Gemini or any MCP client, and keep every byte of your data.
 
-[One-prompt install](#-one-prompt-install) · [What it does](#-what-it-does) · [How it works](#-how-it-works) · [Connect your AI](#-connect-your-ai) · [Architecture](docs/ARCHITECTURE.md)
+**[▶ Live demo](https://openplate-puce.vercel.app)** · [One-prompt install](#-one-prompt-install) · [What it does](#-what-it-does) · [How it works](#-how-it-works) · [Connect your AI](#-connect-your-ai) · [Architecture](docs/ARCHITECTURE.md)
 
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 ![MCP](https://img.shields.io/badge/MCP-native-8A2BE2)
@@ -17,7 +17,7 @@ Self-host it for free in one prompt, talk to it from Claude, ChatGPT, Gemini or 
 
 </div>
 
-![OpenPlate: Home, Meals, Nutrition and Fitness](docs/screenshots/hero.png)
+[![OpenPlate: Home, Meals, Nutrition and Fitness](docs/screenshots/hero.png)](https://openplate-puce.vercel.app)
 
 ---
 
@@ -87,8 +87,9 @@ same live data.
 ## 👀 Try the demo
 
 The demo runs the real app on made-up sample data, entirely in your browser:
-no account needed, nothing is saved, and it resets on reload. *(Link coming
-soon: deploy your own demo with one setting, below.)*
+no account needed, nothing is saved, and it resets on reload.
+
+**👉 [openplate-puce.vercel.app](https://openplate-puce.vercel.app)** (best on a phone; add it to your home screen)
 
 **Host a demo yourself:** import this repo on [Vercel](https://vercel.com/new),
 add the environment variable `VITE_DEMO=true` (no Supabase needed), and
