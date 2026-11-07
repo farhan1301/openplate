@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+/*
+ * Apple-style design tokens. Light and dark values follow the iOS system
+ * palette (grouped backgrounds, label hierarchy, system tint colors).
+ */
+:root {
+  color-scheme: light dark;
+
+  --c-canvas: #f2f2f7;
+  --c-surface: #ffffff;
+  --c-elevated: #ffffff;
+  --c-fill: rgba(118, 118, 128, 0.12);
+  --c-fill-strong: rgba(118, 118, 128, 0.2);
+  --c-label: #000000;
+  --c-label-2: rgba(60, 60, 67, 0.6);
+  --c-label-3: rgba(60, 60, 67, 0.3);
+  --c-separator: rgba(60, 60, 67, 0.18);
+  --c-bar: rgba(249, 249, 249, 0.82);
+  --c-scrim: rgba(0, 0, 0, 0.32);
+
+  --c-tint: #007aff;
+  --c-green: #34c759;
+  --c-orange: #ff9500;
+  --c-red: #ff3b30;
+  --c-yellow: #ffcc00;
+  --c-pink: #ff2d55;
+  --c-indigo: #5856d6;
+  --c-teal: #30b0c7;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.04);
+  --shadow-float: 0 12px 40px rgba(0, 0, 0, 0.16);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --c-canvas: #000000;
+    --c-surface: #1c1c1e;
+    --c-elevated: #2c2c2e;
+    --c-fill: rgba(118, 118, 128, 0.24);
+    --c-fill-strong: rgba(118, 118, 128, 0.36);
+    --c-label: #ffffff;
+    --c-label-2: rgba(235, 235, 245, 0.6);
+    --c-label-3: rgba(235, 235, 245, 0.3);
+    --c-separator: rgba(84, 84, 88, 0.6);
+    --c-bar: rgba(22, 22, 24, 0.8);
+    --c-scrim: rgba(0, 0, 0, 0.55);
+
+    --c-tint: #0a84ff;
+    --c-green: #30d158;
+    --c-orange: #ff9f0a;
+    --c-red: #ff453a;
+    --c-yellow: #ffd60a;
+    --c-pink: #ff375f;
+    --c-indigo: #5e5ce6;
+    --c-teal: #40c8e0;
+
+    --shadow-card: none;
+    --shadow-float: 0 12px 40px rgba(0, 0, 0, 0.6);
+  }
+}
+
+@theme inline {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  --color-canvas: var(--c-canvas);
+  --color-surface: var(--c-surface);
+  --color-elevated: var(--c-elevated);
+  --color-fill: var(--c-fill);
+  --color-fill-strong: var(--c-fill-strong);
+  --color-label: var(--c-label);
+  --color-label-2: var(--c-label-2);
+  --color-label-3: var(--c-label-3);
+  --color-separator: var(--c-separator);
+  --color-bar: var(--c-bar);
+  --color-scrim: var(--c-scrim);
+
+  --color-tint: var(--c-tint);
+  --color-green: var(--c-green);
+  --color-orange: var(--c-orange);
+  --color-red: var(--c-red);
+  --color-yellow: var(--c-yellow);
+  --color-pink: var(--c-pink);
+  --color-indigo: var(--c-indigo);
+  --color-teal: var(--c-teal);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-float: var(--shadow-float);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    margin: 0;
+    background: var(--c-canvas);
+    color: var(--c-label);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.01em;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: default;
+  }
+
+  input, select, textarea, button {
+    font: inherit;
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--c-tint);
+    outline-offset: 2px;
+  }
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.glass {
+  background: var(--c-bar);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@keyframes sheet-in {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes sheet-in-desktop {
+  from { transform: translateY(16px) scale(0.98); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes toast-in {
+  from { transform: translate(-50%, 16px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+.animate-sheet {
+  animation: sheet-in 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@media (min-width: 640px) {
+  .animate-sheet {
+    animation: sheet-in-desktop 0.24s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+}
+
+.animate-fade {
+  animation: fade-in 0.2s ease-out;
+}
+
+.animate-toast {
+  animation: toast-in 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-sheet, .animate-fade, .animate-toast {
+    animation: none;
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "api/**/*.js": {
+      "includeFiles": "docs/MEALS_AGENT.md",
+      "maxDuration": 15
+    }
+  }
+}
