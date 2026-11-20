@@ -123,7 +123,7 @@ time. Then add the URL it gives you:
 | Client | How |
 | --- | --- |
 | Claude (web, desktop, mobile) | Settings → Connectors → Add custom connector |
-| Claude Code | `claude mcp add --transport http openplate "<URL>"` |
+| Claude Code | `claude mcp add --transport http openplate <APP_URL>/api/mcp --header "Authorization: Bearer <key>"` |
 | ChatGPT | Settings → Connectors / Apps → developer mode → add MCP server |
 | Gemini CLI, Cursor, VS Code, … | Add a remote HTTP MCP server |
 | Any chat without MCP | AI Access → **Copy guide + snapshot**, paste into the chat |

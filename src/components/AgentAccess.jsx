@@ -332,10 +332,14 @@ export default function AgentAccessSheet({ onClose }) {
       </FormGroup>
 
       {newKey && (
-        <Section title={`New key: ${newKey.label}${newKey.can_write ? ' (can make changes)' : ' (read-only)'}`} footer="Copy it now: the key is shown only once. Revoke it below if it leaks.">
+        <Section title={`New key: ${newKey.label}${newKey.can_write ? ' (can make changes)' : ' (read-only)'}`} footer="Copy it now: the key is shown only once. Prefer the header form where the client allows it; a URL with the key can end up in logs and connector settings. If it leaks, revoke the key below and create a new one.">
           <div className="space-y-3 p-4">
             <div>
-              <p className="mb-1 text-[13px] text-label-2">Connector URL (MCP)</p>
+              <p className="mb-1 text-[13px] text-label-2">MCP URL + header (preferred, for clients that can set headers)</p>
+              <p className="break-all rounded-[10px] bg-fill px-3 py-2 font-mono text-[13px] text-label">{`${window.location.origin}/api/mcp`}<br />{`Authorization: Bearer ${newKey.token}`}</p>
+            </div>
+            <div>
+              <p className="mb-1 text-[13px] text-label-2">Connector URL (for clients that only take a URL, like claude.ai)</p>
               <p className="break-all rounded-[10px] bg-fill px-3 py-2 font-mono text-[13px] text-label">{mcpUrl(newKey.token)}</p>
             </div>
             <div>
