@@ -32,6 +32,9 @@ person or a household.
 
 ## 1. Get the code
 
+Needs **Node.js 22.12 or newer** (`node -v`). On an older Node, `npm install`
+or `npm run build` fails partway; upgrade first (e.g. `nvm install 22`).
+
 Preferred: the owner's own copy, so Vercel can deploy from it.
 
 ```bash
@@ -154,7 +157,9 @@ answers with an error saying an agent key is needed (that means the API is up).
 
 ## 6. Point Supabase Auth at the app
 
-Magic-link emails must redirect back to `APP_URL`.
+Magic-link emails must redirect back to `APP_URL`. Only the production URL
+(and localhost) is allowed, so signing in on a Vercel **preview** deployment
+won't work; use the production URL.
 
 **With a Supabase access token** (`npx supabase login` stores one; or the
 owner creates one at https://supabase.com/dashboard/account/tokens):
@@ -196,10 +201,15 @@ In the app: **profile picture → AI Access**.
 2. **Create a key**, turn on **Can make changes** if the agent should log
    food, update the pantry, etc. Copy the MCP URL shown:
    `APP_URL/api/mcp?key=opa_…` (shown once).
+   If the client lets you set headers, prefer the bare URL `APP_URL/api/mcp`
+   with `Authorization: Bearer opa_…`: a key in a URL can end up in request
+   logs and connector settings. Use `?key=` only for clients that take just a
+   URL (like claude.ai custom connectors). If a URL with a key leaks, revoke
+   the key and create a new one.
 3. Add it as a custom connector:
    - **Claude** (claude.ai / Desktop / mobile): Settings → Connectors → Add
      custom connector → paste the URL.
-   - **Claude Code:** `claude mcp add --transport http openplate "<URL>"`
+   - **Claude Code:** `claude mcp add --transport http openplate APP_URL/api/mcp --header "Authorization: Bearer opa_…"`
    - **ChatGPT:** Settings → Connectors / Apps → developer mode → add the
      URL as an MCP server.
    - **Gemini CLI, Cursor, VS Code, others:** add it as a remote HTTP MCP

@@ -666,6 +666,7 @@ const callTool = async (name, args, key) => {
   }
 }
 
+const MAX_BATCH = 20
 const rpcResult = (id, result) => ({ jsonrpc: '2.0', id, result })
 const rpcError = (id, code, message) => ({ jsonrpc: '2.0', id: id ?? null, error: { code, message } })
 
@@ -726,6 +727,9 @@ export default async function handler(req, res) {
   }
 
   const messages = Array.isArray(body) ? body : [body]
+  if (messages.length > MAX_BATCH) {
+    return res.status(400).json(rpcError(null, -32600, `Batch too large: at most ${MAX_BATCH} messages per request.`))
+  }
   const replies = (await Promise.all(messages.map(m => handleMessage(m, key)))).filter(Boolean)
 
   if (replies.length === 0) return res.status(202).end()
