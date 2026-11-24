@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Check, ChevronLeft, ChevronRight, Dumbbell, Minus, Moon, Plus, Scale, Target, Trash2, X } from 'lucide-react'
 import { ActionSheet, AddButton, Button, EmptyState, ErrorBanner, FormGroup, PageHeader, Row, Section, Segmented, Sheet, TextArea, TextInput } from './ui'
+import WeightChart from './WeightChart'
 import { cx } from '../lib/cx'
 import { pluralize } from '../lib/kitchen'
 import { addDays, parseDay, today } from '../lib/nutrition'
@@ -278,6 +279,7 @@ function BodySection({ body, goals, onLog, onEdit }) {
       ) : (
         <p className="border-b border-separator px-4 py-3 text-[15px] text-label-2">No weigh-ins yet.</p>
       )}
+      <WeightChart body={body} target={goals?.target_weight ? Number(goals.target_weight) : null} unit={unit} />
       {recent.map(b => (
         <Row
           key={b.id}
