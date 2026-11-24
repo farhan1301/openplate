@@ -155,8 +155,11 @@ function WeekChart({ days, goal, selected, onSelect }) {
 const numberText = (value) => (value == null || value === '' ? '' : String(value))
 const toNumber = (text) => {
   const n = parseFloat(String(text).replace(',', '.'))
-  return Number.isFinite(n) && n >= 0 ? Math.round(n * 10) / 10 : 0
+  return Number.isFinite(n) && n >= 0 ? n : 0
 }
+const nutrientAmount = (text) => Math.round(toNumber(text) * 10) / 10
+// Servings keep two decimals so 0.25 or 0.33 of a meal isn't rounded to 0.3 (or 0.04 to 0, which became 1).
+const servingsAmount = (text) => Math.round(toNumber(text) * 100) / 100
 
 /** Add or edit one log entry. Picking a saved meal fills in its numbers × servings. */
 function EntryEditor({ entry, day, slot, meals, onClose, onSave, onDelete }) {
@@ -179,7 +182,7 @@ function EntryEditor({ entry, day, slot, meals, onClose, onSave, onDelete }) {
   const set = (key) => (value) => setForm(prev => ({ ...prev, [key]: value }))
 
   const fillFrom = (source, servings) => Object.fromEntries(
-    Object.entries(scaleNutrition(source, toNumber(servings) || 1)).map(([key, value]) => [key, numberText(value)]),
+    Object.entries(scaleNutrition(source, servingsAmount(servings) || 1)).map(([key, value]) => [key, numberText(value)]),
   )
 
   const pickMeal = (picked) => {
@@ -217,9 +220,9 @@ function EntryEditor({ entry, day, slot, meals, onClose, onSave, onDelete }) {
         slot: form.slot,
         name: form.name.trim(),
         meal_id: form.mealId,
-        servings: toNumber(form.servings) || 1,
+        servings: servingsAmount(form.servings) || 1,
         notes: form.notes.trim() || null,
-        ...Object.fromEntries(NUTRIENTS.map(({ key }) => [key, toNumber(form[key])])),
+        ...Object.fromEntries(NUTRIENTS.map(({ key }) => [key, nutrientAmount(form[key])])),
       })
       onClose()
     } catch (err) {
@@ -289,13 +292,13 @@ function GoalsEditor({ goals, onClose, onSave }) {
   const [form, setForm] = useState(() => Object.fromEntries(NUTRIENTS.map(({ key }) => [key, numberText(goals?.[key])])))
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
-  const fromMacros = toNumber(form.protein) * 4 + toNumber(form.carbs) * 4 + toNumber(form.fat) * 9
+  const fromMacros = nutrientAmount(form.protein) * 4 + nutrientAmount(form.carbs) * 4 + nutrientAmount(form.fat) * 9
 
   const save = async () => {
     setSaving(true)
     setError('')
     try {
-      await onSave(Object.fromEntries(NUTRIENTS.map(({ key }) => [key, toNumber(form[key]) || null])))
+      await onSave(Object.fromEntries(NUTRIENTS.map(({ key }) => [key, nutrientAmount(form[key]) || null])))
       onClose()
     } catch (err) {
       setError(err.message || 'Could not save your goals.')
@@ -324,7 +327,7 @@ function GoalsEditor({ goals, onClose, onSave }) {
 }
 
 const entrySubtitle = (entry) => [
-  Number(entry.servings) !== 1 && `${formatAmount(entry.servings)} servings`,
+  Number(entry.servings) !== 1 && `${Number(entry.servings)} servings`,
   `P ${formatAmount(entry.protein)} · C ${formatAmount(entry.carbs)} · F ${formatAmount(entry.fat)} g`,
   entry.logged_by !== 'App' && `by ${entry.logged_by}`,
 ].filter(Boolean).join(' · ')
