@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useEffectEvent } from 'react'
 import { Check, ChevronRight, Search, Star, X } from 'lucide-react'
 import { cx } from '../lib/cx'
 
@@ -262,18 +262,35 @@ export function EmptyState({ icon: Icon, title, message, action }) {
 
 // ---------- sheets ----------
 
-function useEscape(open, onClose) {
+// Editors can open a confirmation sheet while their draft stays mounted.
+const openSheets = []
+let previousOverflow
+
+function dismissTopSheet(event) {
+  if (event.key === 'Escape' && !event.repeat && !event.defaultPrevented) {
+    openSheets.at(-1)?.()
+  }
+}
+
+function useSheetDismissal(open, onClose) {
+  const close = useEffectEvent(onClose)
   useEffect(() => {
     if (!open) return
-    const onKey = (e) => { if (e.key === 'Escape') onClose() }
-    document.addEventListener('keydown', onKey)
-    const previous = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.removeEventListener('keydown', onKey)
-      document.body.style.overflow = previous
+    if (openSheets.length === 0) {
+      previousOverflow = document.body.style.overflow
+      document.body.style.overflow = 'hidden'
+      document.addEventListener('keydown', dismissTopSheet)
     }
-  }, [open, onClose])
+    const dismiss = () => close()
+    openSheets.push(dismiss)
+    return () => {
+      openSheets.splice(openSheets.indexOf(dismiss), 1)
+      if (openSheets.length === 0) {
+        document.removeEventListener('keydown', dismissTopSheet)
+        document.body.style.overflow = previousOverflow
+      }
+    }
+  }, [open])
 }
 
 /**
@@ -281,7 +298,7 @@ function useEscape(open, onClose) {
  * larger screens. `onConfirm` renders the bold right-hand nav button.
  */
 export function Sheet({ open, onClose, title, confirmLabel = 'Done', onConfirm, confirmDisabled, cancelLabel = 'Cancel', children }) {
-  useEscape(open, onClose)
+  useSheetDismissal(open, onClose)
   if (!open) return null
 
   return (
@@ -316,7 +333,7 @@ export function Sheet({ open, onClose, title, confirmLabel = 'Done', onConfirm, 
 }
 
 export function ActionSheet({ open, onClose, title, message, actions }) {
-  useEscape(open, onClose)
+  useSheetDismissal(open, onClose)
   if (!open) return null
 
   return (
