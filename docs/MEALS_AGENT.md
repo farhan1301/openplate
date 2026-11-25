@@ -195,7 +195,7 @@ Every agent connected to the kitchen reads the new version from then on.
 | `find` + `replace` | Swaps one passage. `find` must be copied exactly from the guide and appear once; `replace: ""` deletes it. The usual way to edit. |
 | `append` | Adds Markdown at the end, e.g. a `## House rules` section. |
 | `content` | Replaces the whole guide. Only when the owner asks for a rewrite. |
-| `reset: true` | Discards every edit and goes back to the built-in guide. |
+| `reset: true` | Restores the built-in guide and discards every edit. Resetting requires the JSON boolean `true`. You may pass boolean `false` alongside a normal edit. |
 
 Rules:
 

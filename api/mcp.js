@@ -416,7 +416,7 @@ const WRITE_TOOLS = [
   {
     name: 'update_kitchen_guide',
     title: 'Edit the kitchen guide',
-    description: 'Changes the kitchen guide that get_kitchen_guide returns (Markdown): field definitions, rules, how to answer, house rules. Read the guide first. Pass exactly one of: find + replace (swap one exact passage, the usual way to edit), append (add a section at the end), content (replace the whole guide), or reset: true (go back to the built-in guide). Only change it when the owner asks; the previous text is kept in the change log.',
+    description: 'Changes the kitchen guide that get_kitchen_guide returns (Markdown): field definitions, rules, how to answer, house rules. Read the guide first. Pass exactly one of: find + replace (swap one exact passage, the usual way to edit), append (add a section at the end), content (replace the whole guide), or reset: true (requires the JSON boolean true to restore the built-in guide). Only change it when the owner asks; the previous text is kept in the change log.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -424,7 +424,7 @@ const WRITE_TOOLS = [
         replace: { type: 'string', description: 'New text for find; "" deletes it' },
         append: { type: 'string', description: 'Markdown to add at the end, e.g. a "## House rules" section' },
         content: { type: 'string', description: 'The whole new guide, in Markdown' },
-        reset: { type: 'boolean', description: 'true: discard all edits and use the built-in guide' },
+        reset: { type: 'boolean', description: 'Must be the JSON boolean true to discard all edits and restore the built-in guide. False allows a normal edit.' },
       },
       additionalProperties: false,
     },
@@ -646,7 +646,7 @@ const callTool = async (name, args, key) => {
     case 'get_kitchen_guide': {
       const guide = await getGuideState(key)
       const edited = guide.customized
-        ? `<!-- Edited${guide.updated_by ? ` by ${guide.updated_by}` : ''} on ${guide.updated_at}. update_kitchen_guide changes it; reset: true restores the built-in guide. -->\n\n`
+        ? `<!-- Edited${guide.updated_by ? ` by ${guide.updated_by}` : ''} on ${guide.updated_at}. To restore the built-in guide with update_kitchen_guide, set reset to the JSON boolean true. -->\n\n`
         : ''
       return edited + guide.content
     }
