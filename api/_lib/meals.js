@@ -121,7 +121,14 @@ const pick = (args, allowed) => {
 /** An optional YYYY-MM-DD range argument; null when absent. */
 const rangeDay = (value, name) => {
   if (value == null || value === '') return null
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new AgentError(`${name} must look like 2026-10-24.`, 400)
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    throw new AgentError(`${name} must look like 2026-10-24.`, 400)
+  }
+  // UTC round-trip catches dates that JavaScript rolls into the next month.
+  const date = new Date(`${value}T00:00:00Z`)
+  if (value.startsWith('0000') || Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== value) {
+    throw new AgentError(`${name} must be a valid calendar date.`, 400)
+  }
   return value
 }
 
@@ -206,7 +213,10 @@ const editText = (current, args, { what, readTool, canReset }) => {
     throw new AgentError(`Pass exactly one of: content (replace all of ${what}), find + replace, append${canReset ? ', or reset: true' : ''}.`, 400)
   }
   const [mode] = modes
-  if (mode === 'reset') return { mode, next: null }
+  if (mode === 'reset') {
+    if (args.reset !== true) throw new AgentError('Resetting the guide requires reset: true (a JSON boolean).', 400)
+    return { mode, next: null }
+  }
   if (mode === 'content') {
     if (!isText(args.content) || (canReset && !args.content.trim())) throw new AgentError(`content must be all of ${what} as Markdown text.${canReset ? ' To go back to the built-in guide, pass reset: true.' : ''}`, 400)
     return { mode, next: args.content }
