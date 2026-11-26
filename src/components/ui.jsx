@@ -296,8 +296,9 @@ function useSheetDismissal(open, onClose) {
 /**
  * iOS-style sheet: slides up from the bottom on phones, centered card on
  * larger screens. `onConfirm` renders the bold right-hand nav button.
+ * `label` names the dialog for screen readers when the header has no title.
  */
-export function Sheet({ open, onClose, title, confirmLabel = 'Done', onConfirm, confirmDisabled, cancelLabel = 'Cancel', children }) {
+export function Sheet({ open, onClose, title, label, confirmLabel = 'Done', onConfirm, confirmDisabled, cancelLabel = 'Cancel', children }) {
   useSheetDismissal(open, onClose)
   if (!open) return null
 
@@ -307,15 +308,15 @@ export function Sheet({ open, onClose, title, confirmLabel = 'Done', onConfirm, 
       <div
         role="dialog"
         aria-modal="true"
-        aria-label={title}
+        aria-label={label || title}
         className="animate-sheet relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-[14px] bg-canvas shadow-float sm:max-h-[85vh] sm:max-w-lg sm:rounded-[14px] dark:bg-[#1c1c1e]"
       >
         <div className="mx-auto mt-1.5 h-[5px] w-9 rounded-full bg-label-3 sm:hidden" />
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 pb-2 pt-2 sm:pt-3.5">
           <div>
-            <TextButton onClick={onClose}>{onConfirm ? cancelLabel : ''}</TextButton>
+            {onConfirm && <TextButton onClick={onClose}>{cancelLabel}</TextButton>}
           </div>
-          <h2 className="truncate text-center text-[17px] font-semibold text-label">{title}</h2>
+          {title ? <h2 className="truncate text-center text-[17px] font-semibold text-label">{title}</h2> : <span />}
           <div className="text-right">
             {onConfirm ? (
               <TextButton onClick={onConfirm} disabled={confirmDisabled} className="font-semibold">{confirmLabel}</TextButton>

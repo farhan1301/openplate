@@ -33,7 +33,7 @@ export default function MealDetail({ kitchen, meal, onClose, onEdit, onDelete, o
   const meta = STATUS_META[readiness.status]
 
   return (
-    <Sheet open onClose={onClose} title="">
+    <Sheet open onClose={onClose} title="" label={meal.name}>
       <FoodImage
         src={meal.image_url}
         name={meal.name}
