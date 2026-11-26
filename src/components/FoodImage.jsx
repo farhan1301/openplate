@@ -59,10 +59,13 @@ export function PhotoField({ value, onChange, name, hint }) {
       <div className="flex items-center gap-4 border-b border-separator p-3">
         <FoodImage src={value} name={name} hint={hint} className="h-20 w-28 shrink-0 rounded-[10px]" emojiClassName="text-[32px]" />
         <div className="flex min-w-0 flex-col items-start gap-1.5">
-          <label className={cx('inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-full bg-tint/12 px-3 text-[15px] font-semibold text-tint', uploading && 'pointer-events-none opacity-60')}>
+          <label className={cx(
+            'relative inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-full bg-tint/12 px-3 text-[15px] font-semibold text-tint focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-tint',
+            uploading && 'pointer-events-none opacity-60',
+          )}>
             {uploading ? <Loader2 size={15} className="animate-spin" /> : <Camera size={15} strokeWidth={2.4} />}
             {uploading ? 'Uploading…' : value ? 'Change Photo' : 'Add Photo'}
-            <input type="file" accept="image/*" onChange={pick} className="hidden" />
+            <input type="file" accept="image/*" onChange={pick} disabled={uploading} className="sr-only" />
           </label>
           {value && !uploading && (
             <button type="button" onClick={() => onChange('')} className="inline-flex h-7 items-center gap-1 px-1 text-[13px] text-red">
