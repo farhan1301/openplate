@@ -227,10 +227,14 @@ const editText = (current, args, { what, readTool, canReset }) => {
   }
   if (!isText(args.find) || !args.find) throw new AgentError(`find must be text copied exactly from ${what}.`, 400)
   if (!isText(args.replace)) throw new AgentError('Pass replace (the new text; "" deletes the passage) along with find.', 400)
-  const count = current.split(args.find).length - 1
-  if (count === 0) throw new AgentError(`find doesn't appear in ${what}. Copy it exactly (including spacing and punctuation) from ${readTool}.`, 400)
-  if (count > 1) throw new AgentError(`find appears ${count} times in ${what}. Include more surrounding text so it matches once.`, 400)
-  return { mode, next: current.replace(args.find, () => args.replace) }
+  const first = current.indexOf(args.find)
+  if (first === -1) throw new AgentError(`find doesn't appear in ${what}. Copy it exactly (including spacing and punctuation) from ${readTool}.`, 400)
+  if (current.indexOf(args.find, first + 1) !== -1) {
+    const count = current.split(args.find).length - 1
+    const detail = count > 1 ? `appears ${count} times` : 'matches at overlapping positions'
+    throw new AgentError(`find ${detail} in ${what}. Include more surrounding text so it matches once.`, 400)
+  }
+  return { mode, next: current.slice(0, first) + args.replace + current.slice(first + args.find.length) }
 }
 
 /** Changes the guide (see editText; reset: true goes back to the built-in guide). Write-enabled keys only. */
